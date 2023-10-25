@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'djoser',
     #  internal apps
     'users',
 ]
@@ -77,8 +78,32 @@ WSGI_APPLICATION = 'recipes_api.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ]
 }
+
+
+# simple jwt - konfigurujemy libke
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': [
+        'JWT',
+        'Bearer'
+    ],
+    'ROTATE_REFRESH_TOKENS': True
+}
+
+
+# djoser - czyli mogę wyrzucić djosera?
+DJOSER = {
+    'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': 'activate/{uid}/{token}'
+}
+
+
+# email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 # Database

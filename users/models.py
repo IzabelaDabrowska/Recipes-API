@@ -1,8 +1,13 @@
+import random
+import string
+
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -15,7 +20,6 @@ class AppUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.password = make_password(password)
-        # user.set_password(password)
         user.save(using=self._db)
         return user
 
@@ -66,6 +70,47 @@ class AppUserManager(BaseUserManager):
 class AppUser(AbstractUser):
     username = None
     email = models.EmailField(_("email address"), blank=False, unique=True)
+    activation_code = models.CharField(max_length=8, blank=True, null=True)
+    activation_code_valid_until = models.DateTimeField(blank=True, null=True)
     objects = AppUserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    def set_activation_code(self):
+        code = "".join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        self.activation_code = code
+        self.activation_code_valid_until = timezone.now() + timezone.timedelta(days=1)
+
+    def send_activation_mail(self):
+        send_mail(
+            'Complete your registration!',
+            f'to complete your registration please enter the following code: {self.activation_code}',
+            'recipes@wp.pl',
+            [self.email, ],
+            fail_silently=False
+        )
+
+    def register(self, password):
+        self.set_password(password)
+        self.is_active = False
+        self.set_activation_code()
+        self.send_activation_mail()
+        self.save()
+
+    def activate(self, activation_code):
+        if self.is_active is True:
+            raise Exception('User is already activated')
+        if self.activation_code != activation_code:
+            raise Exception('Provided activation code is invalid')
+        if self.activation_code_valid_until < timezone.now():
+            raise Exception('Provided activation code expired')
+        self.is_active = True
+        self.activation_code_valid_until = timezone.now()
+        self.save()
+
+    def resend_activation_code(self):
+        if self.is_active is True:
+            raise Exception('User is already activated')
+        self.set_activation_code()
+        self.send_activation_mail()
+        self.save()
