@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
+from categories.views import CategoryViewSet
 from users.views import (ActivateAccountView, AppUserViewSet, RegisterView,
                          ResendActivationCode)
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path('api/auth/activate/', ActivateAccountView.as_view()),
     path('api/auth/login/', TokenObtainPairView.as_view()),
     path('api/auth/refresh/', TokenRefreshView.as_view()),
+    path('api/categories/', CategoryViewSet.as_view()),
 ]
