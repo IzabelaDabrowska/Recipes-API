@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users',
     'categories',
     'tags',
+    'ingredients',
 ]
 
 MIDDLEWARE = [
