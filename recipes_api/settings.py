@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     #  internal apps
     'users',
     'categories',
+    'tags',
 ]
 
 MIDDLEWARE = [
