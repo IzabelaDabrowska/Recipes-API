@@ -1,0 +1,10 @@
+from django.contrib import admin
+
+from .models import Recipe
+
+
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ["title", 'category', "author", "created_at"]
+
+
+admin.site.register(Recipe, RecipeAdmin)
