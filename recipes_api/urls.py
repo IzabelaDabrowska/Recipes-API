@@ -7,7 +7,6 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
 from categories.views import CategoryViewSet
-from ingredients.views import IngredientViewSet
 from recipes.views import RecipeViewSet
 from tags.views import TagViewSet
 from users.views import (ActivateAccountView, AddRecipeToFavorite,
@@ -29,7 +28,6 @@ urlpatterns = (
         path('api/add-to-favorite/', AddRecipeToFavorite.as_view()),
         path('api/categories/', CategoryViewSet.as_view()),
         path('api/tags/', TagViewSet.as_view()),
-        path('api/ingredients/', IngredientViewSet.as_view()),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

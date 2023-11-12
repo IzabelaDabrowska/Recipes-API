@@ -50,3 +50,6 @@ class RecipeIngredient(models.Model):
     ingredient = models.CharField(max_length=20)
     amount = models.IntegerField()
     unit = models.CharField(choices=UNIT, max_length=15, default=GRAM)
+
+    def __str__(self) -> str:
+        return self.recipe.title

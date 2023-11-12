@@ -8,7 +8,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ["amount", 'unit']
+    list_display = ["ingredient", "amount", 'unit']
 
 
 admin.site.register(Recipe, RecipeAdmin)

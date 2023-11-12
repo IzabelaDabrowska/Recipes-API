@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'users',
     'categories',
     'tags',
-    'ingredients',
     'recipes',
 ]
 
