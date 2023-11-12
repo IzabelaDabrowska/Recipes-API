@@ -22,6 +22,7 @@ class AppUserAdmin(UserAdmin):
             },
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Favorite recipes"), {"fields": ("favorites_recipes",)}),
     )
     add_fieldsets = (
         (

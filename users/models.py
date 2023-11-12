@@ -75,6 +75,7 @@ class AppUser(AbstractUser):
     objects = AppUserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
+    favorites_recipes = models.ManyToManyField("recipes.Recipe")
 
     def set_activation_code(self):
         code = "".join(random.choices(string.ascii_uppercase + string.digits, k=8))

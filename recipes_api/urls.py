@@ -10,8 +10,8 @@ from categories.views import CategoryViewSet
 from ingredients.views import IngredientViewSet
 from recipes.views import RecipeViewSet
 from tags.views import TagViewSet
-from users.views import (ActivateAccountView, AppUserViewSet, RegisterView,
-                         ResendActivationCode)
+from users.views import (ActivateAccountView, AddRecipeToFavorite,
+                         AppUserViewSet, RegisterView, ResendActivationCode)
 
 def_router = DefaultRouter()
 def_router.register(r"users", AppUserViewSet)
@@ -26,6 +26,7 @@ urlpatterns = (
         path('api/auth/activate/', ActivateAccountView.as_view()),
         path('api/auth/login/', TokenObtainPairView.as_view()),
         path('api/auth/refresh/', TokenRefreshView.as_view()),
+        path('api/add-to-favorite/', AddRecipeToFavorite.as_view()),
         path('api/categories/', CategoryViewSet.as_view()),
         path('api/tags/', TagViewSet.as_view()),
         path('api/ingredients/', IngredientViewSet.as_view()),

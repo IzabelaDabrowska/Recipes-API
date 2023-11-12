@@ -2,9 +2,16 @@ from typing import Dict
 
 from rest_framework.serializers import (CharField, EmailField,
                                         HyperlinkedModelSerializer,
-                                        ModelSerializer, Serializer)
+                                        ModelSerializer,
+                                        PrimaryKeyRelatedField, Serializer)
+
+from recipes.models import Recipe
 
 from .models import AppUser
+
+
+class AddRecipeToFavoriteSerializer(Serializer):
+    recipe = PrimaryKeyRelatedField(queryset=Recipe.objects.all())
 
 
 class AppUserSerializer(HyperlinkedModelSerializer):
