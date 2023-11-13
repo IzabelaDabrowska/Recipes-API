@@ -5,10 +5,25 @@ from rest_framework.viewsets import ModelViewSet
 
 from tags.models import Tag
 
-from .models import Recipe, RecipeIngredient
+from .models import Recipe, RecipeIngredient, RecipeReview
 from .permissions import HasObjectPermission
-from .serializers import (CreateRecipeSerializer, DetailsRecipeSerializer,
+from .serializers import (CreateRecipeReviewSerializer, CreateRecipeSerializer,
+                          DetailsRecipeSerializer, ListRecipeReviewSerializer,
                           ListRecipeSerializer)
+
+
+class RecipeReviewView(ModelViewSet):
+    queryset = RecipeReview.objects.all()
+    permission_classes = [IsAuthenticatedOrReadOnly, HasObjectPermission]
+
+    def get_queryset(self):
+        recipe_id = self.kwargs["recipe_id"]
+        return RecipeReview.objects.filter(recipe_id=recipe_id)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ListRecipeReviewSerializer
+        return CreateRecipeReviewSerializer
 
 
 class RecipeViewSet(ModelViewSet):

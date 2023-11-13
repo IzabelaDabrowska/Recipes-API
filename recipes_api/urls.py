@@ -7,7 +7,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
 
 from categories.views import CategoryViewSet
-from recipes.views import RecipeViewSet
+from recipes.views import RecipeReviewView, RecipeViewSet
 from tags.views import TagViewSet
 from users.views import (ActivateAccountView, AddRecipeToFavorite,
                          AppUserViewSet, RegisterView, ResendActivationCode)
@@ -15,6 +15,7 @@ from users.views import (ActivateAccountView, AddRecipeToFavorite,
 def_router = DefaultRouter()
 def_router.register(r"users", AppUserViewSet)
 def_router.register(r"recipes", RecipeViewSet)
+def_router.register(r"recipes/(?P<recipe_id>\d+)/reviews", RecipeReviewView)
 
 urlpatterns = (
     [

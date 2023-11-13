@@ -12,4 +12,6 @@ __pycache__/
 *.pyo
 __pycache__/
 
+uploads
+
 db.sqlite3
