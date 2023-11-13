@@ -13,7 +13,7 @@ from rest_framework.serializers import (CharField, CurrentUserDefault,
                                         PrimaryKeyRelatedField,
                                         SerializerMethodField)
 
-from .models import Recipe, RecipeIngredient, RecipeReview
+from .models import Recipe, RecipeIngredient, RecipeReview, RecipeStep
 
 
 class Base64ImageField(ImageField):
@@ -59,6 +59,14 @@ class RecipeIngredientSerializer(ModelSerializer):
         fields = ["ingredient", "amount", "unit"]
 
 
+class RecipeStepSerializer(ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = RecipeStep
+        fields = ["description", "image", "order"]
+
+
 class AuthorSerializer(ModelSerializer):
     class Meta:
         model = get_user_model()
@@ -97,6 +105,7 @@ class DetailsRecipeSerializer(ModelSerializer):
     tags = SerializerMethodField()
     average_review = SerializerMethodField()
     ingredients = RecipeIngredientSerializer(read_only=True, many=True)
+    steps = RecipeStepSerializer(read_only=True, many=True)
     author = AuthorSerializer(read_only=True)
 
     def get_category(self, obj):
@@ -107,7 +116,9 @@ class DetailsRecipeSerializer(ModelSerializer):
 
     def get_average_review(self, obj):
         reviews = list(RecipeReview.objects.filter(recipe=obj))
-        return mean([x.review for x in reviews])
+        if reviews:
+            return mean([x.review for x in reviews])
+        return 0
 
     class Meta:
         model = Recipe
@@ -122,7 +133,8 @@ class DetailsRecipeSerializer(ModelSerializer):
             "image",
             "author",
             "average_review",
-            "ingredients"
+            "ingredients",
+            "steps",
         ]
 
 
@@ -135,7 +147,9 @@ class ListRecipeSerializer(ModelSerializer):
 
     def get_average_review(self, obj):
         reviews = list(RecipeReview.objects.filter(recipe=obj))
-        return mean([x.review for x in reviews])
+        if reviews:
+            return mean([x.review for x in reviews])
+        return 0
 
     class Meta:
         model = Recipe
@@ -155,6 +169,7 @@ class CreateRecipeSerializer(ModelSerializer):
     image = Base64ImageField()
     newTags = ListSerializer(child=CharField(), default=[])
     ingredients = RecipeIngredientSerializer(many=True)
+    steps = RecipeStepSerializer(many=True)
     author = HiddenField(default=CurrentUserDefault())
 
     class Meta:
@@ -169,4 +184,5 @@ class CreateRecipeSerializer(ModelSerializer):
             "newTags",
             "ingredients",
             "author",
+            "steps",
         ]

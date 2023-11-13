@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from tags.models import Tag
 
-from .models import Recipe, RecipeIngredient, RecipeReview
+from .models import Recipe, RecipeIngredient, RecipeReview, RecipeStep
 from .permissions import HasObjectPermission
 from .serializers import (CreateRecipeReviewSerializer, CreateRecipeSerializer,
                           DetailsRecipeSerializer, ListRecipeReviewSerializer,
@@ -60,6 +60,13 @@ class RecipeViewSet(ModelViewSet):
                     ingredient=i["ingredient"],
                     amount=i["amount"],
                     unit=i["unit"],
+                )
+            for e in serializer.validated_data["steps"]:
+                RecipeStep.objects.create(
+                    recipe=recipe,
+                    description=e["description"],
+                    image=e["image"],
+                    order=e["order"],
                 )
             response_serializer = DetailsRecipeSerializer(recipe)
         return Response(response_serializer.data, status=201)

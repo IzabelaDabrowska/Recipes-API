@@ -64,8 +64,18 @@ class RecipeIngredient(models.Model):
         return self.recipe.title
 
 
+class RecipeStep(models.Model):
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="steps")
+    description = models.TextField()
+    image = models.ImageField(blank=True, null=True)
+    order = models.IntegerField()
+
+    def __str__(self) -> str:
+        return self.recipe.title
+
+
 class RecipeReview(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="reviews")
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     author = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     review = models.IntegerField(choices=REVIEW)
     description = models.CharField(max_length=300)
