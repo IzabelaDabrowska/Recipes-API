@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from recipes.filters import RecipeFilters
 from tags.models import Tag
 
 from .models import Recipe, RecipeIngredient, RecipeReview, RecipeStep
@@ -29,6 +30,7 @@ class RecipeReviewView(ModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly, HasObjectPermission]
+    filterset_class = RecipeFilters
 
     def get_serializer_class(self):
         if self.action == "list":
