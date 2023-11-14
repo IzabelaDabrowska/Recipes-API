@@ -1,6 +1,6 @@
 from django.http.response import HttpResponse
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,7 +11,8 @@ from .permissions import BasePermission
 from .serializers import (ActivateAccountSerializer,
                           AddRecipeToFavoriteSerializer, AppUserSerializer,
                           CurrentUserSerializer, RegisterSerializer,
-                          ResendActivationCodeSerializer)
+                          ResendActivationCodeSerializer,
+                          UpdateCurrentUserSerializer)
 
 
 class AppUserViewSet(ModelViewSet):
@@ -27,6 +28,14 @@ class CurrentUserView(APIView):
         user = self.request.user
         response_serializer = CurrentUserSerializer(user, context={"request": self.request})
         return Response(response_serializer.data, status=200)
+
+
+class UpdateCurrentUserView(UpdateAPIView):
+    serializer_class = UpdateCurrentUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
 
 
 class RegisterView(CreateAPIView):

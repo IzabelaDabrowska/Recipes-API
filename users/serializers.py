@@ -1,5 +1,7 @@
 from typing import Dict
 
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from rest_framework.serializers import (CharField, EmailField,
                                         HyperlinkedModelSerializer,
                                         ModelSerializer,
@@ -36,15 +38,33 @@ class CurrentUserSerializer(ModelSerializer):
         fields = ["id", "first_name", "last_name", "favorites_recipes", "recipes"]
 
 
+class UpdateCurrentUserSerializer(ModelSerializer):
+    password = CharField(write_only=True, required=False)
+
+    class Meta:
+        model = AppUser
+        fields = ["first_name", "last_name", "password"]
+
+    def validate_password(self, value):
+        try:
+            validate_password(value, self.instance)
+        except ValidationError as exc:
+            raise ValidationError(str(exc))
+        return value
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password", None)
+        if password:
+            instance.set_password(password)
+
+        return super(UpdateCurrentUserSerializer, self).update(instance, validated_data)
+
+
 class RegisterSerializer(ModelSerializer):
     class Meta:
         model = AppUser
         fields = ["email", "first_name", "last_name", "password"]
-        extra_kwargs = {
-            'password': {
-                'write_only': True
-            }
-        }
+        extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data: Dict) -> AppUser:
         created_user: AppUser = super().create(validated_data)
