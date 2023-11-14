@@ -10,13 +10,23 @@ from .models import AppUser
 from .permissions import BasePermission
 from .serializers import (ActivateAccountSerializer,
                           AddRecipeToFavoriteSerializer, AppUserSerializer,
-                          RegisterSerializer, ResendActivationCodeSerializer)
+                          CurrentUserSerializer, RegisterSerializer,
+                          ResendActivationCodeSerializer)
 
 
 class AppUserViewSet(ModelViewSet):
     queryset = AppUser.objects.all()
     serializer_class = AppUserSerializer
     permission_classes = [BasePermission]
+
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, *args, **kwargs):
+        user = self.request.user
+        response_serializer = CurrentUserSerializer(user, context={"request": self.request})
+        return Response(response_serializer.data, status=200)
 
 
 class RegisterView(CreateAPIView):
