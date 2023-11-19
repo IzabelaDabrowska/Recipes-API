@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-lgb-9%5wk-@wjcxl)1=+ua$1e1*-2*50992*n9-gfq40_e8ag*
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -45,9 +45,12 @@ INSTALLED_APPS = [
     'categories',
     'tags',
     'recipes',
+    # Needs to be last
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
