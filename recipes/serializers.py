@@ -140,10 +140,14 @@ class DetailsRecipeSerializer(ModelSerializer):
 
 class ListRecipeSerializer(ModelSerializer):
     category = SerializerMethodField()
+    tags = SerializerMethodField()
     average_review = SerializerMethodField()
 
     def get_category(self, obj):
         return obj.category.name
+
+    def get_tags(self, obj):
+        return [x.name for x in obj.tags.all()]
 
     def get_average_review(self, obj):
         reviews = list(RecipeReview.objects.filter(recipe=obj))
@@ -162,6 +166,7 @@ class ListRecipeSerializer(ModelSerializer):
             "image",
             "average_review",
             "created_at",
+            "tags"
         ]
 
 
