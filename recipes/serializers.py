@@ -107,6 +107,13 @@ class DetailsRecipeSerializer(ModelSerializer):
     ingredients = RecipeIngredientSerializer(read_only=True, many=True)
     steps = RecipeStepSerializer(read_only=True, many=True)
     author = AuthorSerializer(read_only=True)
+    is_favorite = SerializerMethodField()
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj in request.user.favorites_recipes.all()
+        return False
 
     def get_category(self, obj):
         return obj.category.name
@@ -135,6 +142,7 @@ class DetailsRecipeSerializer(ModelSerializer):
             "average_review",
             "ingredients",
             "steps",
+            "is_favorite"
         ]
 
 
@@ -142,6 +150,13 @@ class ListRecipeSerializer(ModelSerializer):
     category = SerializerMethodField()
     tags = SerializerMethodField()
     average_review = SerializerMethodField()
+    is_favorite = SerializerMethodField()
+
+    def get_is_favorite(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return obj in request.user.favorites_recipes.all()
+        return False
 
     def get_category(self, obj):
         return obj.category.name
@@ -166,7 +181,8 @@ class ListRecipeSerializer(ModelSerializer):
             "image",
             "average_review",
             "created_at",
-            "tags"
+            "tags",
+            "is_favorite"
         ]
 
 
