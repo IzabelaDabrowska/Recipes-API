@@ -94,10 +94,11 @@ class CreateRecipeReviewSerializer(ModelSerializer):
 class ListRecipeReviewSerializer(ModelSerializer):
     user = AuthorSerializer(read_only=True)
     recipe = PrimaryKeyRelatedField(queryset=Recipe.objects.all())
+    author = AuthorSerializer(read_only=True)
 
     class Meta:
         model = RecipeReview
-        fields = ["id", "recipe", "review", "description", "user"]
+        fields = ["id", "recipe", "review", "description", "user", "author"]
 
 
 class DetailsRecipeSerializer(ModelSerializer):
