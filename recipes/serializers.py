@@ -74,7 +74,7 @@ class AuthorSerializer(ModelSerializer):
 
 
 class CreateRecipeReviewSerializer(ModelSerializer):
-    user = HiddenField(default=CurrentUserDefault())
+    author = HiddenField(default=CurrentUserDefault())
 
     def to_internal_value(self, instance):
         representation = super().to_internal_value(instance)
@@ -87,7 +87,7 @@ class CreateRecipeReviewSerializer(ModelSerializer):
 
     class Meta:
         model = RecipeReview
-        fields = ["id", "recipe", "review", "description", "user"]
+        fields = ["recipe", "review", "description", "author"]
         extra_kwargs = {"recipe": {"read_only": True}}
 
 
