@@ -1,6 +1,7 @@
 import random
 import string
 
+from django.conf import settings
 from django.contrib import auth
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
@@ -85,9 +86,10 @@ class AppUser(AbstractUser):
     def send_activation_mail(self):
         send_mail(
             'Complete your registration!',
-            f'to complete your registration please enter the following code: {self.activation_code}',
-            'recipes@wp.pl',
-            [self.email, ],
+            f'To complete your registration to Recipes please enter this page:'
+            f' http://localhost:3000/activate-account/{self.activation_code}/{self.email}',
+            settings.EMAIL_HOST_USER,
+            [self.email],
             fail_silently=False
         )
 

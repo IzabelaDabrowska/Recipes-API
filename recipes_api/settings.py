@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
-    'djoser',
     #  internal apps
     'users',
     'categories',
@@ -104,13 +103,6 @@ SIMPLE_JWT = {
 }
 
 
-# djoser - czyli mogę wyrzucić djosera?
-DJOSER = {
-    'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'activate/{uid}/{token}'
-}
-
-
 # email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -145,6 +137,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.AppUser'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 
 # Internationalization
